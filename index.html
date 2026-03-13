@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Learn Chinese Game</title>
+<style>
+body{
+    font-family: Arial;
+    text-align:center;
+    background-color:rgb(179, 161, 247);
+}
+h1{
+    font-size: 40px;
+    color:#000000;
+}
+button{
+    padding: 20px 40px;
+    font-size:28px;
+    margin:10px;
+    cursor: pointer;
+    border-radius: 25px;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    transition: 0.3s;
+}
+button:hover {
+    transform: scale(1.05);
+    background-color: #c0392b;
+}
+#gameBox{
+    background:rgb(255, 255, 255);
+    padding:125px;
+    width:800px;
+    margin:auto;
+    border-radius:50px;
+    box-shadow:0px 0px 10px rgb(106, 4, 4);
+}
+#result{
+    font-size: 60px; /* 大大的 Correct/Wrong */
+    font-weight: bold;
+    margin-top: 20px;
+}
+</style>
+</head>
+<body>
+
+<h1>Learn Chinese Quiz Game</h1>
+<div id="gameBox">
+
+<h2 id="question">Press "Start Game" to begin the game！</h2>
+
+<button id="startBtn" onclick="startGame()">Start Game<br>开始</button>
+<br><br>
+
+<p id="result"></p>
+<p id="score"></p>
+
+<button id="btn0" onclick="answer(0)">Answer A</button>
+<button id="btn1" onclick="answer(1)">Answer B</button>
+<button id="btn2" onclick="answer(2)">Answer C</button>
+</div>
+
+<script>
+// 20题混合
+let questions = [
+    {question:"1. What is the English meaning of 吃饭?", answers:["Eat","Drink","Sleep"], correct:0},
+    {question:"2. What is 'lying' in Chinese?", answers:["说谎","躺着","跑步"], correct:0},
+    {question:"3. What is the pronunciation of 桌子?", answers:["zhuō zi","yǐ zi","shū jià"], correct:0},
+    {question:"4. What is 'happy' in Chinese?", answers:["高兴","生气","伤心"], correct:0},
+    {question:"5. What is 'dog' in Chinese?", answers:["狗","猫","鸟"], correct:0},
+    {question:"6. What is the English meaning of 水果?", answers:["Fruit","Vegetable","Meat"], correct:0},
+    {question:"7. What is the pronunciation of 猫？", answers:["māo","gǒu","niǎo"], correct:0},
+    {question:"8. What is 'teacher' in Chinese?", answers:["老师","学生","医生"], correct:0},
+    {question:"9. What is 'eat' in Chinese?", answers:["吃","喝","睡"], correct:0},
+    {question:"10. What is the English meaning of 学校?", answers:["School","Library","Park"], correct:0},
+    {question:"11. What is the pronunciation of 书?", answers:["shū","zhǐ","bǐ"], correct:0},
+    {question:"12. What is 'apple' in Chinese?", answers:["苹果","香蕉","橙子"], correct:0},
+    {question:"13. What is the English meaning of 电影?", answers:["Movie","Music","Dance"], correct:0},
+    {question:"14. What is the pronunciation of 灯?", answers:["dēng","diàn","tīng"], correct:0},
+    {question:"15. What is 'school' in Chinese?", answers:["学校","医院","公园"], correct:0},
+    {question:"16. What is the English meaning of 医院?", answers:["Hospital","Restaurant","Bank"], correct:0},
+    {question:"17. What is the pronunciation of 黄色?", answers:["huáng sè","huī sè","hóng sè"], correct:0},
+    {question:"18. What is 'train' in Chinese?", answers:["火车","飞机","汽车"], correct:0},
+    {question:"19. What is 'music' in Chinese?", answers:["音乐","电影","舞蹈"], correct:0},
+    {question:"20. What is the pronunciation of 门?", answers:["mén","chuāng","dēng"], correct:0}
+];
+
+let currentQuestion = 0;
+let score = 0;
+
+function startGame(){
+    currentQuestion = 0;
+    score = 0;
+    document.getElementById("startBtn").style.display = "none"; 
+    document.getElementById("result").innerHTML = "";
+    document.getElementById("score").innerHTML = "";
+    document.getElementById("question").innerHTML = "";
+    showQuestion();
+}
+
+function showQuestion(){
+    let q = questions[currentQuestion];
+    document.getElementById("question").innerHTML = q.question;
+
+    // 清空上一题结果
+    document.getElementById("result").innerHTML = "";
+
+    // 随机答案顺序
+    let answerOptions = [...q.answers];
+    for(let i=answerOptions.length-1; i>0; i--){
+        let j = Math.floor(Math.random()*(i+1));
+        [answerOptions[i], answerOptions[j]] = [answerOptions[j], answerOptions[i]];
+    }
+
+    // 显示答案按钮
+    for(let i=0; i<3; i++){
+        let btn = document.getElementById("btn"+i);
+        btn.innerHTML = answerOptions[i];
+        btn.style.display = "inline-block";
+    }
+
+    q.randomCorrect = answerOptions.indexOf(q.answers[q.correct]);
+}
+
+function answer(choice){
+    let q = questions[currentQuestion];
+
+    // ✅ 点击答案后先隐藏所有按钮
+    for(let i=0; i<3; i++){
+        document.getElementById("btn"+i).style.display = "none";
+    }
+
+    if(choice === q.randomCorrect){
+        document.getElementById("result").innerHTML = "✅ Correct!";
+        score++;
+    } else {
+        document.getElementById("result").innerHTML = "❌ Wrong!";
+    }
+
+    currentQuestion++;
+
+    if(currentQuestion < questions.length){
+        setTimeout(showQuestion,1000);
+    } else {
+        document.getElementById("question").innerHTML = "🎉 Congratulations! You finished the quiz!";
+        document.getElementById("score").innerHTML = "Your Score: " + score;
+        document.getElementById("result").innerHTML = "";
+    }
+}
+</script>
+
+</body>
+</html>
